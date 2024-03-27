@@ -12,7 +12,6 @@ pipeline {
             steps {
                 script {
                     def app = docker.build("dimitarneshkoski/kiii__jenkins")
-                    // Now app is properly initialized and can be used within this scope
                 }
             }
         }
@@ -20,8 +19,9 @@ pipeline {
         stage('Push image') {
             steps {
                 script {
+                    def app // Define app variable here
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                        def app = docker.image("dimitarneshkoski/kiii__jenkins")
+                        app = docker.image("dimitarneshkoski/kiii__jenkins") // Assign value to app here
                         app.push("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
                         app.push("${env.BRANCH_NAME}-latest")
                         // signal the orchestrator that there is a new version
